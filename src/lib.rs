@@ -43,7 +43,6 @@ impl WildMatch<'_> {
             index = index + 1;
         }
 
-        println!("DP->before:\n{}",dp);
         let mut i = 0;
         let mut j = 0;
         for input_char in input.chars() {
@@ -58,7 +57,6 @@ impl WildMatch<'_> {
                 }
             }
         }
-        println!("DP->after:\n{}",dp);
         return dp[[i, j]] == 1;
     }
 }
