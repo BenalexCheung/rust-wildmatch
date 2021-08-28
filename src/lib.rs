@@ -22,6 +22,15 @@ impl WildMatch<'_> {
     pub fn new(pattern: &str) -> WildMatch {
         WildMatch { pattern: pattern }
     }
+    ///
+    /// # Examples
+    ///
+    /// ```
+    ///
+    /// let a = WildMatch::new("*pple?好呀").matches("apple你你好呀");
+    ///
+    /// assert_eq!(a, true);
+    /// ```
     pub fn matches(&self, input: &str) -> bool {
         if self.pattern.is_empty() {
             return input.is_empty();
