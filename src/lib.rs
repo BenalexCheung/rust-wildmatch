@@ -1,11 +1,25 @@
+use std::fmt;
+mod dp;
+use dp::DP;
+
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct WildMatch<'a> {
     pattern: &'a str,
 }
 
+impl fmt::Display for WildMatch<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        use std::fmt::Write;
+
+        for c in self.pattern.chars() {
+                f.write_char(c)?;
+        }
+        Ok(())
+    }
+}
+
 impl WildMatch<'_> {
     pub fn new(pattern: &str) -> WildMatch {
-        println!("pattern:{}", pattern);
         WildMatch { pattern: pattern }
     }
     pub fn matches(&self, input: &str) -> bool {
@@ -13,34 +27,23 @@ impl WildMatch<'_> {
             return input.is_empty();
         }
 
-        let mut m = 0;
-        for _ in input.chars() {
-            m = m + 1;
-        }
-        let mut n = 0;
-        for _ in self.pattern.chars() {
-            n = n + 1;
-        }
+        let x = input.len();
+        let y = self.pattern.len();
 
-        println!("input:{}", input);
-        println!("m:{},n:{}", m, n);
-
-        use ndarray::Array2;
-        let mut dp = Array2::zeros((m + 1, n + 1));
-        // let mut dp: Vec<usize,usize> = vec![];
-        dp[[0, 0]] = 1;
-        println!("{:?}", dp);
+        let mut dp =DP::new(x+1, y+1);
+        dp[[0,0]] = 1;
 
         let mut index = 1;
         for ch in self.pattern.chars() {
             if ch == '*' {
-                dp[[0, index]] = 1;
+                dp[[0,index]] = 1;
             } else {
                 break;
             }
             index = index + 1;
         }
 
+        println!("DP->before:\n{}",dp);
         let mut i = 0;
         let mut j = 0;
         for input_char in input.chars() {
@@ -55,7 +58,7 @@ impl WildMatch<'_> {
                 }
             }
         }
-
+        println!("DP->after:\n{}",dp);
         return dp[[i, j]] == 1;
     }
 }
